@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090b10">
+<title>CANER WALLET — CNR Demo</title>
+<style>
+:root{color-scheme:dark;--gold:#e7bd62;--panel:#151923;--muted:#9ba4b5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#202536,#090b10 58%);color:#f7f7f8;font:16px -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;min-height:100vh}
+main{max-width:520px;margin:auto;padding:28px 18px 44px}.brand{display:flex;align-items:center;gap:12px;margin:10px 0 28px}.logo{width:46px;height:46px;border:1px solid var(--gold);border-radius:14px;display:grid;place-items:center;color:var(--gold);font-weight:800;font-size:20px}.brand strong{letter-spacing:2px}.brand small{display:block;color:var(--muted);margin-top:4px}
+.card{background:linear-gradient(145deg,#1b2130,#11151e);border:1px solid #30394a;border-radius:22px;padding:23px;margin-bottom:16px;box-shadow:0 14px 38px #0005}.eyebrow{color:var(--muted);font-size:12px;letter-spacing:1.4px;text-transform:uppercase}.balance{font-size:38px;font-weight:750;margin:12px 0 4px}.balance span{font-size:16px;color:var(--gold)}.note{font-size:12px;color:#e8c77e;margin-top:12px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}.actions button,.tabs button,.send button{border:0;border-radius:14px;padding:14px;font-weight:700;background:var(--gold);color:#151515}.actions button.secondary{background:#272f3d;color:#fff;border:1px solid #3a4558}
+.tabs{display:flex;gap:8px;margin:18px 0}.tabs button{flex:1;background:#202633;color:#d9deea;padding:11px 8px}.tabs button.active{background:var(--gold);color:#111}
+.panel{background:var(--panel);border:1px solid #2c3443;border-radius:18px;padding:18px}.panel h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #2b3240}.row:last-child{border:0}.row b{font-size:14px}.row small{display:block;color:var(--muted);margin-top:4px}.positive{color:#8ed5a7}.send{display:grid;gap:10px}.send label{font-size:13px;color:var(--muted)}.send input{width:100%;padding:13px;border:1px solid #394456;border-radius:12px;background:#0d1119;color:white;font-size:16px}.send button{margin-top:4px}.foot{text-align:center;color:#758095;font-size:12px;margin-top:22px}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand"><div class="logo">C</div><div><strong>CANER WALLET</strong><small>CNR • Test arayüzü</small></div></div>
+  <section class="card">
+    <div class="eyebrow">Demo cüzdan bakiyesi</div>
+    <div class="balance" id="balance">10.000 <span>CNR</span></div>
+    <div class="muted">Bu ekrandaki CNR miktarı tamamen örnektir.</div>
+    <div class="note">● SADECE GÖRSEL DEMO — GERÇEK COIN DEĞİLDİR</div>
+  </section>
+  <div class="actions">
+    <button onclick="show('send')">Gönder (Demo)</button>
+    <button class="secondary" onclick="show('receive')">Al (Demo)</button>
+  </div>
+  <nav class="tabs">
+    <button class="active" id="tab-wallet" onclick="show('wallet')">Cüzdan</button>
+    <button id="tab-send" onclick="show('send')">Gönder</button>
+    <button id="tab-receive" onclick="show('receive')">Al</button>
+    <button id="tab-history" onclick="show('history')">Geçmiş</button>
+  </nav>
+  <section class="panel" id="content">
+    <h2>Varlıklar</h2>
+    <div class="row"><div><b>Caner Coin</b><small>CNR • Demo varlığı</small></div><b>10.000 CNR</b></div>
+    <p class="muted">Henüz gerçek bir blokzincire bağlı değildir. Gerçek transfer, alım-satım veya parasal değer içermez.</p>
+  </section>
+  <div class="foot">CANER WALLET • Deneysel arayüz v1.0</div>
+</main>
+<script>
+let balance=10000, history=[];
+const content=document.getElementById('content');
+function fmt(n){return n.toLocaleString('tr-TR')}
+function update(){document.getElementById('balance').innerHTML=fmt(balance)+' <span>CNR</span>'}
+function show(page){
+ document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+ const tab=document.getElementById('tab-'+page);if(tab)tab.classList.add('active');
+ if(page==='wallet')content.innerHTML='<h2>Varlıklar</h2><div class="row"><div><b>Caner Coin</b><small>CNR • Demo varlığı</small></div><b>'+fmt(balance)+' CNR</b></div><p class="muted">Bu bakiye yalnızca bu demo sayfasında gösterilir. Gerçek coin veya para değildir.</p>';
+ if(page==='send')content.innerHTML='<h2>Demo gönderim</h2><div class="send"><label>Alıcı etiketi</label><input id="recipient" placeholder="Örn. Arkadaşım"><label>Miktar (CNR)</label><input id="amount" type="number" min="1" placeholder="100"><button onclick="sendDemo()">Demo gönderimi yap</button><p class="muted">Gerçek adrese gönderim yapılmaz; yalnızca bu sayfadaki örnek geçmişe eklenir.</p></div>';
+ if(page==='receive')content.innerHTML='<h2>Demo alım</h2><p class="muted">Bu prototipte gerçek cüzdan adresi veya QR kodu yoktur. Gerçek transfer kabul edilmez.</p><div class="row"><b>Örnek alım kodu</b><b>CNR-DEMO-001</b></div>';
+ if(page==='history')content.innerHTML='<h2>Demo geçmişi</h2>'+(history.length?history.slice().reverse().map(x=>'<div class="row"><div><b>'+x.label+'</b><small>'+x.date+'</small></div><b class="positive">+'+fmt(x.amount)+' CNR</b></div>').join(''):'<p class="muted">Henüz demo işlemi yok.</p>');
+}
+function sendDemo(){
+ const label=document.getElementById('recipient').value.trim()||'Örnek alıcı';
+ const amount=Number(document.getElementById('amount').value);
+ if(!Number.isFinite(amount)||amount<=0||amount>balance){alert('Geçerli bir demo miktarı gir.');return}
+ balance-=amount;history.push({label:'Demo gönderim: '+label,amount:-amount,date:new Date().toLocaleString('tr-TR')});
+ update();show('history');alert('Demo işlemi kaydedildi. Gerçek transfer yapılmadı.');
+}
+</script>
+</body>
+</html>
